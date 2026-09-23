@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens. Tailwind v4 reads these and generates the matching utilities
+   (font-serif, text-ink, bg-void, ...), so there is no JS config file.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-void: #07070a;
+  --color-ink: #f2efe7;
+  --color-muted: #8b8f9c;
+
+  --font-serif: var(--font-display), ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-meta), ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Lenis. These are the rules from the Lenis docs: Lenis drives real scroll
+   position, so the browser must stop trying to smooth it too.
+--------------------------------------------------------------------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-void);
+    /* The canvas is fixed and full-bleed; a bounce would expose nothing. */
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-ink) 88%, transparent);
+    color: var(--color-void);
+  }
+
+  :focus-visible {
+    outline: 1px solid color-mix(in oklab, var(--color-ink) 70%, transparent);
+    outline-offset: 3px;
+  }
+
+  /* The custom pointer (components/Cursor.tsx) adds this class only once it is
+     actually running, so a failed mount can never leave someone with no cursor. */
+  .cursor-hidden,
+  .cursor-hidden * {
+    cursor: none;
+  }
+
+  /* ...except where placing an insertion point matters more than the effect. */
+  .cursor-hidden input,
+  .cursor-hidden textarea,
+  .cursor-hidden [contenteditable="true"] {
+    cursor: text;
+  }
+
+  /* The wall is drag-scrolled via Lenis, so suppress the native scrollbar.
+     Hiding it in every engine also keeps 1vw == 1% of the usable viewport,
+     which the whole layout depends on. */
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+@layer components {
+  /* Tracking-heavy sans-serif used for every piece of metadata. */
+  .meta-label {
+    font-family: var(--font-sans);
+    font-size: 0.66rem;
+    line-height: 1.4;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+  }
+
+  /* Legibility scrim for typography sitting over the moving cover wall. */
+  .editorial-scrim {
+    background-image: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-void) 92%, transparent) 0%,
+      color-mix(in oklab, var(--color-void) 78%, transparent) 42%,
+      transparent 100%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

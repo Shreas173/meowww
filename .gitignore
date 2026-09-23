@@ -1,0 +1,36 @@
+# --- The book collection -----------------------------------------------------
+# ~8.5 GB of PDFs. Never commit these; the pipeline reads them locally and the
+# rendered covers are what get deployed.
+Mathematics-*/
+Books/
+
+# --- Python pipeline ---------------------------------------------------------
+.venv/
+__pycache__/
+*.pyc
+pipeline/.env
+# Transcripts of unreadable files, enrichment responses and generated palettes.
+pipeline/.cache/
+
+# --- Node / Next -------------------------------------------------------------
+node_modules/
+.next/
+out/
+next-env.d.ts
+.vercel/
+*.tsbuildinfo
+# Local .env overrides. Gitignored so credentials never reach the repo.
+.env*.local
+
+# --- OS ----------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# --- Agent runtime state ------------------------------------------------------
+.reasonix/
+
+# --- Deliberately NOT ignored -------------------------------------------------
+# web/public/library.json and web/public/covers/** are the pipeline's output and
+# must be committed: Vercel never sees the PDFs and cannot run the pipeline.
+# If you would rather not carry ~89 MB of images in git, move the covers to object
+# storage and host the site without them.

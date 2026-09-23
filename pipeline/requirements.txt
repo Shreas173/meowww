@@ -1,0 +1,9 @@
+# Phase 1 — local PDF data pipeline.
+# Python 3.10+ required (uses PEP 604 unions and dataclass slots).
+#
+# NOTE: PyMuPDF is licensed AGPL-3.0 (or commercial). That is fine for a local
+# build script; it only matters if you redistribute this pipeline.
+PyMuPDF>=1.24,<2
+Pillow>=10.0
+requests>=2.31
+python-dotenv>=1.0
